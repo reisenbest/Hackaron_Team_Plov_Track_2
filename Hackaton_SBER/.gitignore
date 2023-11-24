@@ -1,0 +1,32 @@
+db.*
+/**/__pycache__/
+.idea/
+*env
+
+# Django
+*.log
+db.sqlite3
+media/
+
+# VS Code
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# PyCharm
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# System
+__pycache__/
+.DS_Store
+Thumbs.db
