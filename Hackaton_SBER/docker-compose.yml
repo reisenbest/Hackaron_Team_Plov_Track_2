@@ -9,9 +9,9 @@ services:
       - static_volume:/app/static
       - media_volume:/app/media
     command: >
-      bash -c "manage.py collectstatic --noinput && 
-      manage.py makemigrations && 
-      manage.py migrate && 
+      bash -c "python3 manage.py collectstatic --noinput && 
+      python3 manage.py makemigrations && 
+      python3 manage.py migrate && 
       manage.py initadmin && 
       gunicorn -b 0.0.0.0:8000 app.wsgi:application"
 
