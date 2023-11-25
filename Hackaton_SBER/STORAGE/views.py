@@ -9,11 +9,11 @@ from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema
 from rest_framework.views import APIView
 
-from .serializers import ApplicationBaseSerializer, CreditHistoryReportSerializer
+from .serializers import ApplicationBaseSerializer, CreditHistoryReportSerializer, ObligationInformationSerializer
 
-from .models import ApplicationBase, CreditHistoryReport
+from .models import ApplicationBase, CreditHistoryReport, ObligationInformation
 
-@extend_schema(description="все кредитные заявки или одельная заявка по id", tags=["Application"])
+@extend_schema(description="все заявки или одельную заявку по id", tags=["Application"])
 class ApplictionCRUD(viewsets.ModelViewSet):
     queryset = ApplicationBase.objects.all()
     serializer_class = ApplicationBaseSerializer
@@ -26,11 +26,11 @@ class ApplictionCRUD(viewsets.ModelViewSet):
         serializer = CreditHistoryReportSerializer(credit_history_list, many=True)
         return Response(serializer.data)
 
-@extend_schema(description="все БИК,или конкретный БИК по id связанной с ней кредитной заявки заявки", tags=["CreditHistoryReports"])
+@extend_schema(description="получить все БИК, или получить конкретный БИК по id связанной с ней заявки", tags=["CreditHistoryReports"])
 class CreditHistoryReportsCRUD(viewsets.ModelViewSet):
     queryset = CreditHistoryReport.objects.all()
     serializer_class = CreditHistoryReportSerializer
-    lookup_field = 'application_id'
+    lookup_field = 'application'
 
 @extend_schema(description="Получить кредитную заявку по id и ВСЮ (документы, отчет БИК и т.д) связанную с ней инфу", tags=["GetFullApplication"])
 class ApplicationWithRelatedData(APIView):
@@ -41,10 +41,36 @@ class ApplicationWithRelatedData(APIView):
         credit_history_list = CreditHistoryReport.objects.filter(application=application)
         credit_history_serializer = CreditHistoryReportSerializer(credit_history_list, many=True).data
 
+        obligation_info_list = ObligationInformation.objects.filter(application=application)
+        obligation_info_serializer = ObligationInformationSerializer(obligation_info_list, many=True).data
+
         response_data = {
             'application': application_serializer,
             'credit_history_list': credit_history_serializer,
+            'obligation_info_list':obligation_info_serializer
             # добавьте сюда другие связанные данные, если они есть
         }
 
         return Response(response_data)
+
+
+@extend_schema(description="Информация об обязательствах. Кредитная история. получить все>", tags=["ObligationInfo"])
+class ObligationInfoCRUD(viewsets.ModelViewSet):
+    queryset = ObligationInformation.objects.all()
+    serializer_class = ObligationInformationSerializer
+    lookup_field = 'pk'
+
+    @action(detail=False, methods=['get'], )
+    def byapplicationid(self, request, application_id=None):
+
+        # получаем все записи которые есть для указанного application_id
+        if application_id is None:
+            return Response({"error": "введите application_id."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if application_id not in ObligationInformation.objects.values_list('application', flat=True):
+            return Response({"error": "записи с таким application_id не существует"}, status=status.HTTP_400_BAD_REQUEST)
+
+        queryset = ObligationInformation.objects.filter(application_id=application_id)
+        serializer = ObligationInformationSerializer(queryset, many=True)
+
+        return Response(serializer.data)

@@ -11,10 +11,17 @@ router_application.register(r'applicationlist', ApplictionCRUD)
 router_credit_history_reports = SimpleRouter()
 router_credit_history_reports.register(r'credithistorylist', CreditHistoryReportsCRUD)
 
+router_obligation_info = SimpleRouter()
+router_obligation_info.register(r'obligationinfolist', ObligationInfoCRUD)
+
+
 urlpatterns = [
     path('api/', include(router_application.urls)),
     # http://127.0.0.1:8000/api/application/ (<int:pk>/) запись по своему id
     path('api/', include(router_credit_history_reports.urls)),
+    path('api/', include(router_obligation_info.urls)),
 
-path('api/application-with-related-data/<int:pk>/', ApplicationWithRelatedData.as_view(), name='application-with-related-data'),
+    path('api/application-with-related-data/<int:pk>/', ApplicationWithRelatedData.as_view(), name='application-with-related-data'),
+    path('api/obligationinfolist/byapplicationid/<int:application_id>/', ObligationInfoCRUD.as_view({'get': 'byapplicationid'})),
+
 ]
