@@ -12,6 +12,10 @@ COPY pyproject.toml poetry.lock /app/
 
 COPY . /app/
 
+RUN adduser -D user
+RUN chown user:user -R /app/
+RUN chmod +x /app
+
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi
 
