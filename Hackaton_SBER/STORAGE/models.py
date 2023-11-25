@@ -42,3 +42,13 @@ class ApplicationBase(models.Model):
         return f'id: {self.pk}'
     # verification_additional_earn доп таблица
 
+class CreditHistoryReport(models.Model):
+    application = models.ForeignKey(ApplicationBase, related_name='score_rating', on_delete=models.CASCADE)
+    score_rating = models.IntegerField(default=0, verbose_name="Скорбалл (оценка кредитной истории в баллах)",)
+
+    class Meta:
+        verbose_name = "Бюро кредитных историй"
+        verbose_name_plural = "Бюро кредитных историй"
+
+    def __str__(self):
+        return f'application_id: {self.application}'
