@@ -29,3 +29,15 @@ class BankDepositCategory(models.TextChoices):
     ACCUMULATIVE = 'Накопительный', 'Накопительный'
     SETTLEMENT = 'Расчетный', 'Расчетный'
     DEFAULT = 'Отсутствует', 'Отсутствует'
+
+class ProductCategory(models.TextChoices):
+    CONSUMER = 'Потребительский кредит','Потребительский кредит'
+    EDUCATION = 'Кредит на образование', 'Кредит на образование',
+    AUTO = 'Кредит на машину', 'Кредит на машину'
+    IPOTECA = 'Ипотечный кредит', 'Ипотечный кредит'
+
+
+class OtherCondition(models.TextChoices):
+    DEFERRED_REPAYMENT = 'Отсроченное погашение', 'Отсроченное погашение'
+    CREDIT_HOLIDAYS = 'Кредитные каникулы', 'Кредитные каникулы'
+    DEFAULT = 'Специальные уловия отсуствуют', 'Специальные уловия отсуствуют'

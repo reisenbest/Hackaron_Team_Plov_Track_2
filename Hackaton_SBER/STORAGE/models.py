@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from .model_validators import validate_passport_format, validate_deposit_fields
-from .model_choices import FamilyStatus, HasChildren, ObligationStatus, ObligationRole, BankDepositExistance, BankDepositCategory
+from .model_choices import FamilyStatus, HasChildren, ObligationStatus, ObligationRole, BankDepositExistance, BankDepositCategory, OtherCondition, ProductCategory
 from django.utils import timezone
 # Create your models here.
 
@@ -15,7 +15,7 @@ class ApplicationBase(models.Model):
                                      verbose_name='серия и номер пасспорта',blank=True)
     registration_address = models.CharField(max_length=255, verbose_name="адрес регистрации", blank=True)
     actual_address = models.CharField(max_length=255, verbose_name="адрес проживания", blank=True)
-    family_status = models.CharField(max_length=40,
+    family_status = models.CharField(max_length=70,
                                     choices=FamilyStatus.choices,
                                     default=FamilyStatus.DEFAULT,
                                     verbose_name="Семейное положение")
@@ -109,11 +109,11 @@ class BankDeposit(models.Model):
                                  choices=BankDepositExistance.choices,
                                  default=BankDepositExistance.NO,
                                  verbose_name='Наличие сбережений на счетах в Банке')
-    category = models.CharField(max_length=20,
+    category = models.CharField(max_length=50,
                                  choices=BankDepositCategory.choices,
                                  default=BankDepositCategory.DEFAULT,
                                  verbose_name='Категория накоплений (вид вклада)')
-    size = models.DecimalField(max_digits=20,
+    size = models.DecimalField(max_digits=50,
                                 decimal_places=2,
                                 verbose_name='Размер вклада', blank=True)
 
@@ -124,6 +124,49 @@ class BankDeposit(models.Model):
     class Meta:
         verbose_name = "Наличие сбережений на счетах в Банке:"
         verbose_name_plural = "Наличие сбережений на счетах в Банке:"
+
+    def __str__(self):
+        return f'application_id: {self.application}'
+
+class RequestedConditions(models.Model):
+    application = models.ForeignKey(ApplicationBase,
+                                    related_name='requested_condition',
+                                    on_delete=models.CASCADE)
+    product_category = models.CharField(max_length=30,
+                                        choices=ProductCategory.choices,
+                                        default=ProductCategory.CONSUMER,
+                                        verbose_name='Вид кредита')
+    sum_max = models.DecimalField(max_digits=20,
+                                  decimal_places=2,
+                                  verbose_name="Максимальная сумма, которую может дать банк",
+                                  blank=True)
+    sum_requested = models.DecimalField(max_digits=20,
+                                  decimal_places=2,
+                                  verbose_name="Сумма, которую запрашивает клиент",
+                                  blank=True)
+    period_max = models.CharField(max_length=255,
+                                  verbose_name='Максимальный срок, на который банк может выдать кредит',
+                                  blank=True)
+    period_requested = models.CharField(max_length=255,
+                                        verbose_name='Срок, на который клиент просит кредит',
+                                        blank=True)
+
+    credit_rate = models.FloatField(verbose_name='Ставка по кредиту, которую предлагает банк в процентах',
+                                    blank=True)
+    credit_rate_requested = models.FloatField(verbose_name='Ставка по кредиту, которую запрашивает клиент в процентах',
+                                              blank=True)
+    payment_per_month = models.DecimalField(max_digits=20,
+                                  decimal_places=2,
+                                  verbose_name="Сумма ежемесячного платежа, предлагаемая банком (руб)",
+                                  blank=True)
+    other_condition = models.CharField(max_length=30,
+                                 choices=OtherCondition.choices,
+                                 default=OtherCondition.DEFAULT,
+                                 verbose_name='Иные условия запрашиваемые по кредиту')
+
+    class Meta:
+        verbose_name = "Запрашиваемые и предлагаемые условия"
+        verbose_name_plural = "Запрашиваемые и предлагаемые условия"
 
     def __str__(self):
         return f'application_id: {self.application}'

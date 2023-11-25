@@ -9,9 +9,9 @@ from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema
 from rest_framework.views import APIView
 
-from .serializers import ApplicationBaseSerializer, CreditHistoryReportSerializer, ObligationInformationSerializer, BankDepositSerializer
+from .serializers import ApplicationBaseSerializer, CreditHistoryReportSerializer, ObligationInformationSerializer, BankDepositSerializer, RequestedConditionsSerializer
 
-from .models import ApplicationBase, CreditHistoryReport, ObligationInformation, BankDeposit
+from .models import ApplicationBase, CreditHistoryReport, ObligationInformation, BankDeposit, RequestedConditions
 
 @extend_schema(description="все заявки или одельную заявку по id", tags=["Application"])
 class ApplictionCRUD(viewsets.ModelViewSet):
@@ -60,6 +60,12 @@ class BankDepositCRUD(viewsets.ModelViewSet):
     serializer_class = BankDepositSerializer
     lookup_field = 'application_id'
 
+@extend_schema(description="Запрашиваемые и предлагаемые банком условия по конкретной кредитной заявке", tags=["RequestedConditions"])
+class RequestedConditionsCRUD(viewsets.ModelViewSet):
+    queryset = RequestedConditions.objects.all()
+    serializer_class = RequestedConditionsSerializer
+    lookup_field = 'application_id'
+
 
 @extend_schema(description="Получить кредитную заявку по id и ВСЮ (документы, отчет БИК и т.д) связанную с ней инфу", tags=["GetFullApplication"])
 class ApplicationWithRelatedData(APIView):
@@ -76,12 +82,15 @@ class ApplicationWithRelatedData(APIView):
         bank_deposit_list = BankDeposit.objects.filter(application=application)
         bank_deposit_serializer = BankDepositSerializer(bank_deposit_list, many=True).data
 
+        requested_condition_list = RequestedConditions.objects.filter(application=application)
+        requested_condition_serializer = RequestedConditionsSerializer(requested_condition_list, many=True).data
 
         response_data = {
             'application': application_serializer,
             'credit_history_list': credit_history_serializer,
             'obligation_info_list':obligation_info_serializer,
             'bank_deposit_list': bank_deposit_serializer,
+            'requested_condition_list': requested_condition_serializer,
             # добавьте сюда другие связанные данные, если они есть
         }
 
