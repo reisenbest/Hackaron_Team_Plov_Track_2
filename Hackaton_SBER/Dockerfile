@@ -19,4 +19,4 @@ RUN chmod +x /app
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi
 
-CMD ["poetry", "run", "gunicorn","-b","0.0.0.0:8000","app.wsgi:application"]
+CMD ["poetry", "run", "gunicorn","-b","0.0.0.0:8000","Hackaton_SBER.wsgi:application"]

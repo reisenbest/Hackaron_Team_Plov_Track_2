@@ -12,8 +12,7 @@ services:
       bash -c "python3 manage.py collectstatic --noinput && 
       python3 manage.py makemigrations && 
       python3 manage.py migrate && 
-      python3 manage.py createsuperuser && 
-      gunicorn -b 0.0.0.0:8000 app.wsgi:application"
+      gunicorn -b 0.0.0.0:8000 Hackaton_SBER.wsgi:application"
 
   nginx:
     build:
