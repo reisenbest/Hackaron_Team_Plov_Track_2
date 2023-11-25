@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "hackaron-team-plov-track-2"
+version = "0.1.0"
+description = ""
+authors = ["reisenbest <drgn96rd@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^4.2.7"
+djangorestframework = "^3.14.0"
+django-rest-swagger = "^2.2.0"
+django-environ = "^0.11.2"
+drf-spectacular = "^0.26.5"
+drf-spectacular-sidecar = "^2023.10.1"
+django-cors-headers = "^4.3.1"
+gunicorn = "^21.2.0"
+pillow = "^10.1.0"
+
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
