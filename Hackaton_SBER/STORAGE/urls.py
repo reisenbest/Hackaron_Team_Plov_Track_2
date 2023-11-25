@@ -1,6 +1,6 @@
 from django.urls import path, include
 
-from rest_framework.routers import SimpleRouter
+from rest_framework.routers import SimpleRouter, DefaultRouter
 
 from .views import *
 
@@ -20,6 +20,9 @@ router_bank_deposit.register(r'bankdepositlist', BankDepositCRUD)
 router_requested_condition = SimpleRouter()
 router_requested_condition.register(r'requestedconditionlist', RequestedConditionsCRUD)
 
+router = DefaultRouter()
+router.register(r'documentpackageslist', DocumentPackageViewSet)
+
 
 urlpatterns = [
     path('api/', include(router_application.urls)),
@@ -28,8 +31,10 @@ urlpatterns = [
     path('api/', include(router_obligation_info.urls)),
     path('api/', include(router_bank_deposit.urls)),
     path('api/', include(router_requested_condition.urls)),
+    path('api/', include(router.urls)),
 
     path('api/application-with-related-data/<int:pk>/', ApplicationWithRelatedData.as_view(), name='application-with-related-data'),
     path('api/obligationinfolist/byapplicationid/<int:application_id>/', ObligationInfoCRUD.as_view({'get': 'byapplicationid'})),
+    path('api/documentpackageslist/byapplicationid/<int:application_id>/', DocumentPackageViewSet.as_view({'get': 'byapplicationid'})),
 
 ]

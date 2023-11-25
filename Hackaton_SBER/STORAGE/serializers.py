@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ApplicationBase, CreditHistoryReport, ObligationInformation, BankDeposit, RequestedConditions
+from .models import ApplicationBase, CreditHistoryReport, ObligationInformation, BankDeposit, RequestedConditions, DocumentPackage
 
 
 class CreditHistoryReportSerializer(serializers.ModelSerializer):
@@ -26,6 +26,11 @@ class BankDepositSerializer(serializers.ModelSerializer):
 class RequestedConditionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = RequestedConditions
+        fields = '__all__'
+
+class DocumentPackageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DocumentPackage
         fields = '__all__'
 
 

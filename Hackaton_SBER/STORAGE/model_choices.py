@@ -1,4 +1,13 @@
 from django.db import models
+
+class ApplicationStatus(models.TextChoices):
+    NEW = 'Новая', 'Новая'
+    AT_WORK = 'В работе', 'В работе'
+    REQUEST_INFO = 'Дозапрос информации', 'Дозапрос информации'
+    REVISION = 'На доработке', 'На доработке'
+    COMPLETED = 'Завершена', 'Завершена'
+
+
 class FamilyStatus(models.TextChoices):
     DEFAULT = 'Информация отсутствует', 'Информация отсутствует'
     MARRIED_FEMALE = 'Замужем', 'Замужем'
