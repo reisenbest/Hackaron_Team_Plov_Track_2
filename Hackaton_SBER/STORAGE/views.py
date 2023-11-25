@@ -113,12 +113,8 @@ class ApplicationWithRelatedData(APIView):
         requested_condition_serializer = RequestedConditionsSerializer(requested_condition_list, many=True).data
 
         document_package_list = DocumentPackage.objects.filter(application=application)
-        document_package_serializer = DocumentPackageSerializer(document_package_list, many=True).data
-
-        # Преобразование относительных путей в абсолютные URL
-        for doc_package in document_package_list:
-            doc_package['image_url'] = request.build_absolute_uri(
-                doc_package['image']) if 'image' in doc_package else None
+        document_package_serializer = DocumentPackageSerializer(document_package_list, many=True,
+                                                                context={'request': request}).data
 
         response_data = {
             'application': application_serializer,
