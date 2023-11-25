@@ -13,7 +13,9 @@ class FamilyStatus(models.TextChoices):
     MARRIED_FEMALE = 'Замужем', 'Замужем'
     SINGLE_FEMALE = 'Не замужем', 'Не замужем'
     MARRIED_MALE = 'Женат', 'Женат'
-    SINGLE_MALE = 'Холос', 'Холост'
+    SINGLE_MALE = 'Холост', 'Холост'
+    DIVORCED = "В разводе", 'В разводе'
+
 
 class HasChildren(models.TextChoices):
     NO = 'Нет', 'Нет'
@@ -49,4 +51,4 @@ class ProductCategory(models.TextChoices):
 class OtherCondition(models.TextChoices):
     DEFERRED_REPAYMENT = 'Отсроченное погашение', 'Отсроченное погашение'
     CREDIT_HOLIDAYS = 'Кредитные каникулы', 'Кредитные каникулы'
-    DEFAULT = 'Специальные уловия отсуствуют', 'Специальные уловия отсуствуют'
+    DEFAULT = 'Специальные условия отсуствуют', 'Специальные условия отсуствуют'

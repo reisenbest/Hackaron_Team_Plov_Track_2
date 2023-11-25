@@ -40,6 +40,7 @@ class ApplicationBase(models.Model):
                                     choices=ApplicationStatus.choices,
                                     default=ApplicationStatus.NEW,
                                     verbose_name="Статус заявки для андеррайтера")
+    underwriter_commentary = models.TextField(verbose_name='Комментарий андеррайтера', blank=True)
 
     class Meta:
         verbose_name = "Кредитная заявка (базовая)"
