@@ -1,7 +1,8 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
-from .model_validators import validate_passport_format
-from .model_choices import FamilyStatus, HasChildren, ObligationStatus, ObligationRole
+from .model_validators import validate_passport_format, validate_deposit_fields
+from .model_choices import FamilyStatus, HasChildren, ObligationStatus, ObligationRole, BankDepositExistance, BankDepositCategory
 from django.utils import timezone
 # Create your models here.
 
@@ -98,3 +99,32 @@ class ObligationInformation(models.Model):
         return f'application_id: {self.credit_history_report.application.id}, ' \
                f'credit_history_report_id: {self.credit_history_report.id}, ' \
                f'obligation_type: {self.obligation_type}'
+
+
+class BankDeposit(models.Model):
+    application = models.ForeignKey(ApplicationBase,
+                                    related_name='bank_deposit',
+                                    on_delete=models.CASCADE)
+    existence = models.CharField(max_length=3,
+                                 choices=BankDepositExistance.choices,
+                                 default=BankDepositExistance.NO,
+                                 verbose_name='Наличие сбережений на счетах в Банке')
+    category = models.CharField(max_length=20,
+                                 choices=BankDepositCategory.choices,
+                                 default=BankDepositCategory.DEFAULT,
+                                 verbose_name='Категория накоплений (вид вклада)')
+    size = models.DecimalField(max_digits=20,
+                                decimal_places=2,
+                                verbose_name='Размер вклада', blank=True)
+
+
+
+    def clean(self):
+        validate_deposit_fields(self.existence, self.category, self.size)
+    class Meta:
+        verbose_name = "Наличие сбережений на счетах в Банке:"
+        verbose_name_plural = "Наличие сбережений на счетах в Банке:"
+
+    def __str__(self):
+        return f'application_id: {self.application}'
+

@@ -19,3 +19,13 @@ class ObligationRole(models.TextChoices):
 class ObligationStatus(models.TextChoices):
     CURRENT = 'Текущий', 'Текущий'
     COMPLETED = 'Завершенный', 'Завершенный'
+
+class BankDepositExistance(models.TextChoices):
+    YES = 'Да', 'Да'
+    NO = 'Нет', 'Нет'
+
+class BankDepositCategory(models.TextChoices):
+    SAVING = 'Сберегательный', 'Сберегательный'
+    ACCUMULATIVE = 'Накопительный', 'Накопительный'
+    SETTLEMENT = 'Расчетный', 'Расчетный'
+    DEFAULT = 'Отсутствует', 'Отсутствует'
